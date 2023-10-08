@@ -1,4 +1,4 @@
-import { minLength, object, parse, string, flatten } from 'valibot'
+import { minLength, object, parse, string, flatten, ValiError } from 'valibot'
 
 const envSchema = object({
   VITE_APP_TITLE: string([minLength(1, 'Please enter your app title')]),
@@ -13,9 +13,13 @@ export const parseEnv = () => {
       typeof window === 'undefined' ? process.env : import.meta.env,
     )
   } catch (error) {
-    throw new Error(
-      `Please check your .env file. ${JSON.stringify(flatten(error))}`,
-    )
+    if (error instanceof ValiError) {
+      throw new Error(
+        // @tslint:disable-next-line: no-any
+        `Please check your .env file. ${JSON.stringify(flatten(error))}`,
+      )
+    }
+    throw new Error('unexpected error')
   }
 }
 

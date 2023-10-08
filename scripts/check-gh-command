@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# Show error if gh is not installed
+if ! command -v gh &> /dev/null
+then
+    echo ""
+    echo "\\033[1;31m🥺🥺 Missing gh command Error 🥺🥺\\033[0m"
+    echo "\\033[1;31mThis application requires the gh command, but it could not be found.\\033[0m"
+    echo ""
+    echo "Please see \\033[1;34mhttps://cli.github.com/\\033[0m to install it."
+    exit 1
+fi

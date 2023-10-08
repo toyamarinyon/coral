@@ -57,7 +57,6 @@ export const App: React.FC<Props> = ({ title, repo }) => {
           )} in:title sort:interactions`}
         />
       </Suspense>
-      ))
     </main>
   )
 }
