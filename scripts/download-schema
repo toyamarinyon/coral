@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if [ -e schema.json ];then
+  exit
+fi
+echo -e "\\033[1;34m[info]\\033[0m This tool requires the GitHub GraphQL API Schema, so download it."
+
+curl -X GET \
+  -H "Content-Type: application/json" \
+  -H "Authorization: bearer $(gh auth token)" \
+  https://api.github.com/graphql > schema.json

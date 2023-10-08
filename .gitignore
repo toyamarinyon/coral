@@ -11,6 +11,8 @@ node_modules
 dist
 dist-ssr
 *.local
+schema.json
+gql
 
 # Editor directories and files
 .vscode/*
