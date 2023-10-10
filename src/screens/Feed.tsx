@@ -61,10 +61,10 @@ export const Feed: React.FC<Props> = ({
       </div>
       <Suspense fallback={<Loader />}>
         <ReportList
-          query={`repo:${repo} ${reportDate.replace(
+          query={`repo:${repo} "${reportDate.replace(
             /-/g,
             '/',
-          )} in:title sort:interactions`}
+          )}" in:title sort:interactions`}
         />
       </Suspense>
     </main>
