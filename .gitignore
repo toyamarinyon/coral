@@ -24,3 +24,5 @@ gql
 *.njsproj
 *.sln
 *.sw?
+
+.dev.vars
