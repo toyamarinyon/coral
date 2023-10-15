@@ -3,6 +3,7 @@ import { SearchType } from '../../../gql/graphql'
 import { Report } from './Report'
 import { useSuspenseQuery } from '@apollo/client'
 import { startTransition, useEffect, useRef } from 'react'
+import { toast } from 'sonner'
 import { match } from 'ts-pattern'
 
 const ReportListQuery = graphql(`
@@ -52,6 +53,7 @@ export const ReportList: React.FC<Props> = ({ query, scrollContainerRef }) => {
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
+            toast('Loading next data from GitHub...')
             startTransition(() => {
               fetchMore({
                 variables: {
