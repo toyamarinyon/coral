@@ -2,7 +2,7 @@ import { Config } from './config'
 import { ApolloProvider, NetWorkErrorHandler } from './contexts'
 import { useConfig, useRouter } from './hooks/'
 import { ConfigurationForm, Feed } from './screens'
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 import { Toaster, toast } from 'sonner'
 import { match } from 'ts-pattern'
 
@@ -29,6 +29,12 @@ export const App: React.FC = () => {
     },
     [setRoute],
   )
+  useEffect(() => {
+    if (config.state === 'configured') {
+      document.title = config.title
+    }
+  }, [config])
+
   return (
     <>
       {match([config, route])
