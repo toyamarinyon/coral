@@ -20,31 +20,42 @@ export const Label: React.FC<LabelProps> = ({ children, ...props }) => (
   </label>
 )
 
+export type ServerError = {
+  message: string
+}
 type FieldProps = Pick<InputProps, 'type'> & {
   name: string
   label: string
   optional?: boolean
   message?: string
   defaultValue?: string
+  serverError?: ServerError | null
 }
-export const Field: React.FC<FieldProps> = ({
-  name,
-  type = 'text',
-  label,
-  optional = false,
-  defaultValue,
-}) => (
-  <Form.Field className="mb-[10px] grid" name={name}>
+export const Field: React.FC<FieldProps> = (
+  { name, type = 'text', label, optional = false, defaultValue, serverError },
+  ref,
+) => (
+  <Form.Field
+    className="mb-[10px]"
+    name={name}
+    ref={ref}
+    serverInvalid={serverError != null}
+  >
     <div className="flex items-baseline justify-between">
       <Form.Label asChild>
         <Label>{label}</Label>
       </Form.Label>
-      <Form.Message className="text-[13px] opacity-[0.8]" match="valueMissing">
-        Please enter {label}
-      </Form.Message>
     </div>
     <Form.Control asChild defaultValue={defaultValue}>
       <Input type={type} required={!optional} />
     </Form.Control>
+    <Form.Message className="text-[13px] opacity-[0.8]" match="valueMissing">
+      Please enter {label}
+    </Form.Message>
+    {serverError && (
+      <Form.Message className="text-[13px] opacity-[0.8]">
+        {serverError?.message}
+      </Form.Message>
+    )}
   </Form.Field>
 )
