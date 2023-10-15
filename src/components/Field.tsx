@@ -1,13 +1,17 @@
 import * as Form from '@radix-ui/react-form'
-import { InputHTMLAttributes, LabelHTMLAttributes } from 'react'
+import { InputHTMLAttributes, LabelHTMLAttributes, forwardRef } from 'react'
 
 type InputProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'className'>
-export const Input: React.FC<InputProps> = (props) => (
+export const Input: React.FC<InputProps> = forwardRef<
+  HTMLInputElement,
+  InputProps
+>((props, ref) => (
   <input
     className="bg-blackA2 shadow-blackA6 selection:color-white selection:bg-blackA6 box-border inline-flex h-[35px] w-full appearance-none items-center justify-center rounded-[4px] px-[10px] text-[15px] leading-none shadow-[0_0_0_1px] outline-none  hover:shadow-[0_0_0_1px_black] focus:shadow-[0_0_0_2px_black]"
     {...props}
+    ref={ref}
   />
-)
+))
 
 type LabelProps = Omit<LabelHTMLAttributes<HTMLLabelElement>, 'className'>
 export const Label: React.FC<LabelProps> = ({ children, ...props }) => (
