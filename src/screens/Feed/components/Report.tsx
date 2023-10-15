@@ -1,5 +1,5 @@
+import { FragmentType, graphql, useFragment } from '../../../gql/'
 import { ReportComment } from './ReportComment'
-import { FragmentType, graphql, useFragment } from './gql/'
 import {
   ArrowTopRightOnSquareIcon,
   ChatBubbleLeftRightIcon,

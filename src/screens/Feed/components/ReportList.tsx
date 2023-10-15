@@ -1,6 +1,6 @@
+import { graphql } from '../../../gql'
+import { SearchType } from '../../../gql/graphql'
 import { Report } from './Report'
-import { graphql } from './gql'
-import { SearchType } from './gql/graphql'
 import { useSuspenseQuery } from '@apollo/client'
 import { startTransition, useEffect, useRef } from 'react'
 import { match } from 'ts-pattern'

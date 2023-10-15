@@ -1,4 +1,4 @@
-import { FragmentType, graphql, useFragment } from './gql/'
+import { FragmentType, graphql, useFragment } from '../../../gql/'
 import { useMemo } from 'react'
 
 const ReportComment_CommentFragment = graphql(`
