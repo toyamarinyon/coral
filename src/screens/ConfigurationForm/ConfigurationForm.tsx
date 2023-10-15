@@ -13,17 +13,20 @@ export const ConfigurationForm: React.FC<Props> = ({
   onSubmit,
   defaultValues,
 }) => {
+  const [verifyingGhToken, setVerifyingGhToken] = useState(false)
   const [ghTokenError, setGhTokenError] = useState<ServerError | null>(null)
   const handleSubmit = useCallback<FormEventHandler<HTMLFormElement>>(
     async (event) => {
       event.preventDefault()
       const rawData = Object.fromEntries(new FormData(event.currentTarget))
       const data = parse(configSchema, rawData)
+      setVerifyingGhToken(true)
       const { status } = await fetch('https://api.github.com', {
         headers: {
           Authorization: `Bearer ${data.authToken}`,
         },
       })
+      setVerifyingGhToken(false)
       if (status === 401) {
         setGhTokenError({ message: 'Invalid token' })
         return
@@ -89,7 +92,10 @@ export const ConfigurationForm: React.FC<Props> = ({
             </div>
           </div>
           <Form.Submit asChild>
-            <button className="mt-[10px] box-border inline-flex h-[35px] w-full items-center justify-center rounded-[4px] bg-rosePineDawn-overlay px-[15px] font-medium leading-none text-rosePineDawn-text focus:outline-none">
+            <button
+              className="mt-[10px] box-border inline-flex h-[35px] w-full items-center justify-center rounded-[4px] bg-rosePineDawn-text px-[15px] font-medium leading-none text-rosePineDawn-base focus:outline-none disabled:cursor-not-allowed disabled:bg-rosePineDawn-muted"
+              disabled={verifyingGhToken}
+            >
               Save
             </button>
           </Form.Submit>
