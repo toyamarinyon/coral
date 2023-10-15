@@ -13,8 +13,9 @@ import { relayStylePagination } from '@apollo/client/utilities'
 import { PropsWithChildren, Suspense, useMemo } from 'react'
 import { match } from 'ts-pattern'
 
+export type NetWorkErrorHandler = (netWorkError: ServerError) => void
 interface Props {
-  onNetworkError: (netWorkError: ServerError) => void
+  onNetworkError: NetWorkErrorHandler
 }
 export const ApolloProvider: React.FC<
   PropsWithChildren<Pick<Config, 'authToken'> & Props>

@@ -31,31 +31,36 @@ type FieldProps = Pick<InputProps, 'type'> & {
   defaultValue?: string
   serverError?: ServerError | null
 }
-export const Field: React.FC<FieldProps> = (
-  { name, type = 'text', label, optional = false, defaultValue, serverError },
-  ref,
-) => (
-  <Form.Field
-    className="mb-[10px]"
-    name={name}
-    ref={ref}
-    serverInvalid={serverError != null}
-  >
-    <div className="flex items-baseline justify-between">
-      <Form.Label asChild>
-        <Label>{label}</Label>
-      </Form.Label>
-    </div>
-    <Form.Control asChild defaultValue={defaultValue}>
-      <Input type={type} required={!optional} />
-    </Form.Control>
-    <Form.Message className="text-[13px] opacity-[0.8]" match="valueMissing">
-      Please enter {label}
-    </Form.Message>
-    {serverError && (
-      <Form.Message className="text-[13px] opacity-[0.8]">
-        {serverError?.message}
+export const Field: React.FC<FieldProps> = forwardRef<
+  HTMLDivElement,
+  FieldProps
+>(
+  (
+    { name, type = 'text', label, optional = false, defaultValue, serverError },
+    ref,
+  ) => (
+    <Form.Field
+      className="mb-[10px]"
+      name={name}
+      ref={ref}
+      serverInvalid={serverError != null}
+    >
+      <div className="flex items-baseline justify-between">
+        <Form.Label asChild>
+          <Label>{label}</Label>
+        </Form.Label>
+      </div>
+      <Form.Control asChild defaultValue={defaultValue}>
+        <Input type={type} required={!optional} />
+      </Form.Control>
+      <Form.Message className="text-[13px] opacity-[0.8]" match="valueMissing">
+        Please enter {label}
       </Form.Message>
-    )}
-  </Form.Field>
+      {serverError && (
+        <Form.Message className="text-[13px] opacity-[0.8]">
+          {serverError?.message}
+        </Form.Message>
+      )}
+    </Form.Field>
+  ),
 )
