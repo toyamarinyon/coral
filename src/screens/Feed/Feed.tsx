@@ -1,5 +1,5 @@
-import { ErrorBoundary } from '../ErrorBoundary'
-import { ReportList } from '../ReportList'
+import { ErrorBoundary } from '../../ErrorBoundary'
+import { ReportList } from '../../ReportList'
 import { CalendarDaysIcon, Cog6ToothIcon } from '@heroicons/react/24/outline'
 import { Suspense, useCallback, useRef, useState } from 'react'
 

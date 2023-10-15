@@ -1,5 +1,5 @@
-import { Field, ServerError } from '../components'
-import { Config, configSchema } from '../config'
+import { Field, ServerError } from '../../components'
+import { Config, configSchema } from '../../config'
 import { StarIcon } from '@heroicons/react/24/solid'
 import * as Form from '@radix-ui/react-form'
 import { FormEventHandler, useCallback, useState } from 'react'
