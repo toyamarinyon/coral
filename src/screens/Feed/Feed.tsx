@@ -2,12 +2,28 @@ import { ErrorBoundary } from '../../ErrorBoundary'
 import { ReportList } from './components'
 import { CalendarDaysIcon, Cog6ToothIcon } from '@heroicons/react/24/outline'
 import { Suspense, useCallback, useRef, useState } from 'react'
+import { match } from 'ts-pattern'
 
 const Loader: React.FC = () => (
   <div className="inset-0 flex w-full items-center justify-center">
     Fetching the data from GitHub...
   </div>
 )
+
+const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const
+/**
+ * Returns the last work day (Mon-Fri).
+ * @todo Take into account National holidays
+ */
+const lastWorkDay = () => {
+  const date = new Date()
+  const day = date.getDay()
+  const weekdayDiffDelta = match(dayNames[day])
+    .with('Sun', () => 2)
+    .with('Mon', () => 3)
+    .otherwise(() => 1)
+  return new Date(date.getTime() - weekdayDiffDelta * 24 * 60 * 60 * 1000)
+}
 
 interface Props {
   title: string
@@ -20,8 +36,7 @@ export const Feed: React.FC<Props> = ({
   goToConfigurationForm,
 }) => {
   const [reportDate, setReportDate] = useState(
-    // new Date().toISOString().slice(0, 10),
-    '2023-10-06',
+    lastWorkDay().toISOString().slice(0, 10),
   )
   const ref = useRef<HTMLInputElement>(null)
   const handleCalendarClick = useCallback(() => {
