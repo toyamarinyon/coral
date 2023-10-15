@@ -31,6 +31,12 @@ const lastWorkDay = () => {
   return new Date(date.getTime() - weekdayDiffDelta * 24 * 60 * 60 * 1000)
 }
 
+const dateToDateInputValue = (date: Date) =>
+  `${date.getFullYear()}-${date.getMonth() + 1}-${date
+    .getDate()
+    .toString()
+    .padStart(2, '0')}`
+
 interface Props {
   title: string
   repo: string
@@ -42,7 +48,7 @@ export const Feed: React.FC<Props> = ({
   goToConfigurationForm,
 }) => {
   const [reportDate, setReportDate] = useState(
-    lastWorkDay().toISOString().slice(0, 10),
+    dateToDateInputValue(lastWorkDay()),
   )
   const ref = useRef<HTMLInputElement>(null)
   const handleCalendarClick = useCallback(() => {
@@ -55,7 +61,7 @@ export const Feed: React.FC<Props> = ({
     if (scrollContainerRef.current != null) {
       scrollContainerRef.current.scrollTo(0, 0)
     }
-    setReportDate(new Date(e.target.value).toISOString().slice(0, 10))
+    setReportDate(e.target.value)
   }, [])
   return (
     <main className="flex w-full">
