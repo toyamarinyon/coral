@@ -6,7 +6,7 @@
 }
 
 .markdown {
-  @apply break-words leading-normal text-rosePineDawn-text;
+  @apply break-words text-base leading-normal text-rosePineDawn-text;
 }
 
 .markdown > * + * {
