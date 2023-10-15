@@ -19,9 +19,12 @@ export const App: React.FC = () => {
     () => setRoute('setting'),
     [setRoute],
   )
+  const handleNetworkError = useCallback(() => {
+    setRoute('setting')
+  }, [setRoute])
   return match([config, route])
     .with([{ state: 'configured' }, 'feed'], ([{ repo, authToken, title }]) => (
-      <ApolloProvider authToken={authToken}>
+      <ApolloProvider authToken={authToken} onNetworkError={handleNetworkError}>
         <Feed
           title={title}
           repo={repo}

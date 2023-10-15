@@ -4,14 +4,21 @@ import {
   ApolloProvider as OriginalApolloProvider,
   InMemoryCache,
   createHttpLink,
+  from,
+  ServerError,
 } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
+import { onError } from '@apollo/client/link/error'
 import { relayStylePagination } from '@apollo/client/utilities'
 import { PropsWithChildren, Suspense, useMemo } from 'react'
+import { match } from 'ts-pattern'
 
+interface Props {
+  onNetworkError: (netWorkError: ServerError) => void
+}
 export const ApolloProvider: React.FC<
-  PropsWithChildren<Pick<Config, 'authToken'>>
-> = ({ authToken, children }) => {
+  PropsWithChildren<Pick<Config, 'authToken'> & Props>
+> = ({ authToken, children, onNetworkError }) => {
   const client = useMemo(() => {
     const httpLink = createHttpLink({
       uri: 'https://api.github.com/graphql',
@@ -28,8 +35,26 @@ export const ApolloProvider: React.FC<
       }
     })
 
+    const errorLink = onError(({ graphQLErrors, networkError }) => {
+      if (graphQLErrors)
+        graphQLErrors.forEach(({ message, locations, path }) =>
+          console.log(
+            `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
+          ),
+        )
+      if (networkError) {
+        match(networkError.name)
+          .with('ServerError', () => {
+            onNetworkError(networkError as ServerError)
+          })
+          .otherwise(() => {
+            console.log(`[Unhandled network error]: ${networkError}`)
+          })
+      }
+    })
+
     const client = new ApolloClient({
-      link: authLink.concat(httpLink),
+      link: from([errorLink, authLink, httpLink]),
       cache: new InMemoryCache({
         typePolicies: {
           Query: {
@@ -41,7 +66,7 @@ export const ApolloProvider: React.FC<
       }),
     })
     return client
-  }, [authToken])
+  }, [authToken, onNetworkError])
   return (
     <OriginalApolloProvider client={client}>
       <Suspense>{children}</Suspense>

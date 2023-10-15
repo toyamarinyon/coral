@@ -1,3 +1,4 @@
+import { ErrorBoundary } from '../ErrorBoundary'
 import { ReportList } from '../ReportList'
 import { CalendarDaysIcon, Cog6ToothIcon } from '@heroicons/react/24/outline'
 import { Suspense, useCallback, useRef, useState } from 'react'
@@ -59,14 +60,16 @@ export const Feed: React.FC<Props> = ({
           </button>
         </header>
       </div>
-      <Suspense fallback={<Loader />}>
-        <ReportList
-          query={`repo:${repo} "${reportDate.replace(
-            /-/g,
-            '/',
-          )}" in:title sort:interactions`}
-        />
-      </Suspense>
+      <ErrorBoundary fallback="">
+        <Suspense fallback={<Loader />}>
+          <ReportList
+            query={`repo:${repo} "${reportDate.replace(
+              /-/g,
+              '/',
+            )}" in:title sort:interactions`}
+          />
+        </Suspense>
+      </ErrorBoundary>
     </main>
   )
 }
