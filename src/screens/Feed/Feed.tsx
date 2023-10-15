@@ -1,7 +1,13 @@
 import { ErrorBoundary } from '../../ErrorBoundary'
 import { ReportList } from './components'
 import { CalendarDaysIcon, Cog6ToothIcon } from '@heroicons/react/24/outline'
-import { Suspense, useCallback, useRef, useState } from 'react'
+import {
+  ChangeEventHandler,
+  Suspense,
+  useCallback,
+  useRef,
+  useState,
+} from 'react'
 import { match } from 'ts-pattern'
 
 const Loader: React.FC = () => (
@@ -42,6 +48,15 @@ export const Feed: React.FC<Props> = ({
   const handleCalendarClick = useCallback(() => {
     ref.current?.showPicker()
   }, [])
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
+  const handleUpdateReportDate = useCallback<
+    ChangeEventHandler<HTMLInputElement>
+  >((e) => {
+    if (scrollContainerRef.current != null) {
+      scrollContainerRef.current.scrollTo(0, 0)
+    }
+    setReportDate(new Date(e.target.value).toISOString().slice(0, 10))
+  }, [])
   return (
     <main className="flex w-full">
       <div className="px-1 py-2">
@@ -62,11 +77,7 @@ export const Feed: React.FC<Props> = ({
                 className="absolute bottom-0 -z-10 -rotate-90 opacity-0"
                 ref={ref}
                 value={reportDate}
-                onChange={(e) =>
-                  setReportDate(
-                    new Date(e.target.value).toISOString().slice(0, 10),
-                  )
-                }
+                onChange={handleUpdateReportDate}
               />
             </div>
           </div>
@@ -78,6 +89,7 @@ export const Feed: React.FC<Props> = ({
       <ErrorBoundary fallback="">
         <Suspense fallback={<Loader />}>
           <ReportList
+            scrollContainerRef={scrollContainerRef}
             query={`repo:${repo} "${reportDate.replace(
               /-/g,
               '/',

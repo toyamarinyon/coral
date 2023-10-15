@@ -33,8 +33,9 @@ const ReportListQuery = graphql(`
 
 interface Props {
   query: string
+  scrollContainerRef: React.RefObject<HTMLDivElement>
 }
-export const ReportList: React.FC<Props> = ({ query }) => {
+export const ReportList: React.FC<Props> = ({ query, scrollContainerRef }) => {
   const { data, fetchMore } = useSuspenseQuery(ReportListQuery, {
     variables: {
       query,
@@ -42,10 +43,9 @@ export const ReportList: React.FC<Props> = ({ query }) => {
       first: 5,
     },
   })
-  const containerRef = useRef<HTMLDivElement>(null)
   const fetchMoreRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
-    if (fetchMoreRef?.current == null || containerRef?.current == null) {
+    if (fetchMoreRef?.current == null || scrollContainerRef?.current == null) {
       return
     }
     const observer = new IntersectionObserver(
@@ -63,7 +63,7 @@ export const ReportList: React.FC<Props> = ({ query }) => {
         }
       },
       {
-        root: containerRef.current,
+        root: scrollContainerRef.current,
         rootMargin: '0px 0px 30% 0px',
       },
     )
@@ -71,10 +71,15 @@ export const ReportList: React.FC<Props> = ({ query }) => {
     return () => {
       observer.disconnect()
     }
-  }, [data.search.pageInfo.endCursor, fetchMore, containerRef, fetchMoreRef])
+  }, [
+    data.search.pageInfo.endCursor,
+    fetchMore,
+    scrollContainerRef,
+    fetchMoreRef,
+  ])
 
   return (
-    <div className="divide-y-2 overflow-y-scroll" ref={containerRef}>
+    <div className="divide-y-2 overflow-y-scroll" ref={scrollContainerRef}>
       {data.search.edges?.map((edge) =>
         match(edge?.node)
           .with({ __typename: 'Issue' }, (issue) => (
