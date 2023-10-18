@@ -58,7 +58,6 @@ export const Report: React.FC<Props> = (props) => {
     }
     return img.getAttribute('src')
   }, [issue.comments?.nodes])
-  const label = useMemo(() => issue.labels?.nodes?.[0], [issue.labels?.nodes])
   const [firstComment, secondeAndAfterComments] = useMemo(
     () => [issue.comments?.nodes?.[0], issue.comments?.nodes?.slice(1) ?? []],
     [issue.comments?.nodes],
