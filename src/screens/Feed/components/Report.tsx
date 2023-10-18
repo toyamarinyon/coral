@@ -74,9 +74,14 @@ export const Report: React.FC<Props> = (props) => {
             src={issue?.assignees?.nodes?.[0]?.avatarUrl}
             alt=""
           />
-          {label && (
-            <div className="rounded-full px-2 text-sm">{label.name}</div>
-          )}
+          {issue.labels?.nodes?.map((label) => (
+            <div
+              key={label?.id}
+              className="rounded-full bg-rosePineDawn-overlay px-2 text-sm"
+            >
+              {label?.name}
+            </div>
+          ))}
         </div>
         <a href={issue.url} rel="noreferrer noopener" target="_blank">
           <ArrowTopRightOnSquareIcon className="h-6 w-6" />
