@@ -9,11 +9,13 @@ export const useConfig = (): [ConfigState, (config: Config) => void] => {
     authToken: localStorage.getItem('authToken') || '',
     title: localStorage.getItem('title') || '',
     repo: localStorage.getItem('repo') || '',
+    extraQuery: localStorage.getItem('extraQuery') || '',
   })
   const setConfig = (config: Config) => {
     localStorage.setItem('authToken', config.authToken)
     localStorage.setItem('title', config.title)
     localStorage.setItem('repo', config.repo)
+    localStorage.setItem('extraQuery', config.extraQuery)
     _setConfig(config)
   }
   const isConfigured =

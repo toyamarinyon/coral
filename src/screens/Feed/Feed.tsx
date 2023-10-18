@@ -40,11 +40,13 @@ const dateToDateInputValue = (date: Date) =>
 interface Props {
   title: string
   repo: string
+  extraQuery: string
   goToConfigurationForm: () => void
 }
 export const Feed: React.FC<Props> = ({
   title,
   repo,
+  extraQuery,
   goToConfigurationForm,
 }) => {
   const [reportDate, setReportDate] = useState(
@@ -99,7 +101,7 @@ export const Feed: React.FC<Props> = ({
             query={`repo:${repo} "${reportDate.replace(
               /-/g,
               '/',
-            )}" in:title sort:interactions`}
+            )}" in:title sort:interactions ${extraQuery}`}
           />
         </Suspense>
       </ErrorBoundary>

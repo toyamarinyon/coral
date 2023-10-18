@@ -72,8 +72,7 @@ export const ConfigurationForm: React.FC<Props> = ({
                     target="_blank"
                   >
                     This link
-                  </a>
-                  &nbsp;
+                  </a>{' '}
                   <span>can be used as a shortcut to create your token.</span>
                 </p>
               </article>
@@ -89,6 +88,50 @@ export const ConfigurationForm: React.FC<Props> = ({
                 label="Repository"
                 defaultValue={defaultValues?.repo}
               />
+              <div>
+                <Field
+                  name="extraQuery"
+                  label="Extra Query"
+                  defaultValue={defaultValues?.extraQuery}
+                  optional={true}
+                />
+                <article className="mb-3 rounded bg-rosePineDawn-overlay px-4 py-2 text-sm">
+                  <header className="flex items-center space-x-1 font-bold">
+                    <StarIcon className="h-4 w-4" />
+                    <h3>Hint</h3>
+                  </header>
+
+                  <div className="space-y-1">
+                    <p>
+                      You can use the GitHub Code Search syntax like label,
+                      assignee, and others. If you want to know the GitHub Code
+                      Search sysntax to read the{' '}
+                      <a
+                        href="https://docs.github.com/en/search-github/github-code-search/understanding-github-code-search-syntax"
+                        className="text-rosePineDawn-iris underline"
+                        rel="noreferrer noopener"
+                        target="_blank"
+                      >
+                        documentation
+                      </a>
+                      .
+                    </p>
+                    {/* @todo live preview
+                      <p>
+                      If you want to check the results with the current query to{' '}
+                      <a
+                        href="https://github.com/search?q=repo%3Aroute06%2Fdor%20hello&type=code"
+                        className="text-rosePineDawn-iris underline"
+                        rel="noreferrer noopener"
+                        target="_blank"
+                      >
+                        check on the GitHub
+                      </a>
+                      .
+                    </p> */}
+                  </div>
+                </article>
+              </div>
             </div>
           </div>
           <Form.Submit asChild>
