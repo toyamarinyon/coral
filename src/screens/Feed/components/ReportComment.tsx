@@ -1,33 +1,34 @@
-import { FragmentType, graphql, useFragment } from '../../../gql/'
 import { useMemo } from 'react'
 
-const ReportComment_CommentFragment = graphql(`
-  fragment ReportComment_CommentFragment on IssueComment {
-    id
-    body
-    bodyHTML
-  }
-`)
-
 interface Props {
-  comment: FragmentType<typeof ReportComment_CommentFragment>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  bodyHtml: any
+  removeFirstParagraph?: boolean
+  removeFirstImage?: boolean
 }
 
-export const ReportComment = ({ comment }: Props) => {
-  const { bodyHTML } = useFragment(ReportComment_CommentFragment, comment)
-
-  const omitImgHtml = useMemo(() => {
+export const ReportComment = ({
+  bodyHtml,
+  removeFirstParagraph = false,
+  removeFirstImage = false,
+}: Props) => {
+  const omitHtml = useMemo(() => {
     const div = document.createElement('div')
-    div.innerHTML = bodyHTML
-    const imgs = div.querySelectorAll('img')
-    imgs.forEach((img) => img.remove())
+    div.innerHTML = bodyHtml
+
+    if (removeFirstParagraph) {
+      div.querySelector('p')?.remove()
+    }
+    if (removeFirstImage) {
+      div.querySelector('img')?.remove()
+    }
     return div.innerHTML
-  }, [bodyHTML])
+  }, [bodyHtml, removeFirstParagraph, removeFirstImage])
 
   return (
     <div
       className="markdown text-lg"
-      dangerouslySetInnerHTML={{ __html: omitImgHtml }}
+      dangerouslySetInnerHTML={{ __html: omitHtml }}
     />
   )
 }

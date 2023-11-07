@@ -101,7 +101,7 @@ export const Feed: React.FC<Props> = ({
             query={`repo:${repo} "${reportDate.replace(
               /-/g,
               '/',
-            )}" in:title sort:interactions ${extraQuery}`}
+            )}" in:title sort:interactions state:closed ${extraQuery}`}
           />
         </Suspense>
       </ErrorBoundary>
