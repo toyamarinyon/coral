@@ -82,9 +82,11 @@ export const Report: React.FC<Props> = (props) => {
       return [tmp, issue.timelineItems.nodes?.slice(closeIndex + 1) ?? []]
     }, [issue.timelineItems.nodes, issue.bodyHTML])
   const workloadImage = useMemo(() => {
-    issue.bodyHTML.includes('img')
     const bodyHtmlContainer = document.createElement('div')
     bodyHtmlContainer.innerHTML = issue.bodyHTML.trim()
+    bodyHtmlContainer.querySelectorAll('tracking-block').forEach((node) => {
+      node.remove()
+    })
     const imgInBody = bodyHtmlContainer.querySelector('img')
     if (imgInBody != null) {
       return imgInBody.getAttribute('src')
@@ -135,6 +137,7 @@ export const Report: React.FC<Props> = (props) => {
               {commentsBeforeIssueClosed && (
                 <ReportComment
                   bodyHtml={commentsBeforeIssueClosed}
+                  issueUrl={issue.url}
                   removeFirstParagraph={true}
                   removeFirstImage={true}
                 />
@@ -160,7 +163,10 @@ export const Report: React.FC<Props> = (props) => {
                                   <p>{user.login}</p>
                                 </div>
                                 <div className="pl-8">
-                                  <ReportComment bodyHtml={comment.bodyHTML} />
+                                  <ReportComment
+                                    bodyHtml={comment.bodyHTML}
+                                    issueUrl={issue.url}
+                                  />
                                 </div>
                               </div>
                             ))
