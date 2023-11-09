@@ -1,6 +1,8 @@
+import { ReactionList } from './ReactionList'
 import { useMemo } from 'react'
 
 interface Props {
+  id: string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   bodyHtml: any
   issueUrl: string
@@ -9,6 +11,7 @@ interface Props {
 }
 
 export const ReportComment = ({
+  id,
   bodyHtml,
   issueUrl,
   removeFirstParagraph = false,
@@ -33,8 +36,11 @@ export const ReportComment = ({
     return div.innerHTML
   }, [bodyHtml, removeFirstParagraph, removeFirstImage])
 
+  if (omitHtml.length === 0) {
+    return null
+  }
   return (
-    <>
+    <div>
       {hasTaskList && (
         <div className="my-2 rounded border border-rosePineDawn-gold bg-rosePineDawn-surface px-4 py-2 text-rosePineDawn-gold">
           This comment contains a task list but we are unable to display it.
@@ -54,6 +60,7 @@ export const ReportComment = ({
         className="markdown text-lg"
         dangerouslySetInnerHTML={{ __html: omitHtml }}
       />
-    </>
+      <ReactionList commentId={id} />
+    </div>
   )
 }

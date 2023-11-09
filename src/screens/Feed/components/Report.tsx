@@ -62,25 +62,18 @@ interface Props {
 }
 export const Report: React.FC<Props> = (props) => {
   const issue = useFragment(Report_IssueFragment, props.issue)
-  const [commentsBeforeIssueClosed, timelineEventsAfterIssueClosed] =
+  const [timelineEventsBeforeIssueClosed, timelineEventsAfterIssueClosed] =
     useMemo(() => {
-      let tmp = issue.bodyHTML
-      let closed = false
-      let closeIndex = -1
-      issue.timelineItems.nodes?.forEach((node, index) => {
-        if (closed) {
-          return false
-        }
-        if (node?.__typename === 'IssueComment') {
-          tmp += node.bodyHTML
-        }
-        if (node?.__typename === 'ClosedEvent') {
-          closed = true
-          closeIndex = index
-        }
-      })
-      return [tmp, issue.timelineItems.nodes?.slice(closeIndex + 1) ?? []]
-    }, [issue.timelineItems.nodes, issue.bodyHTML])
+      const closeIndex =
+        issue.timelineItems.nodes?.findIndex(
+          (node) => node?.__typename === 'ClosedEvent',
+        ) ?? 1
+
+      return [
+        issue.timelineItems.nodes?.slice(0, closeIndex) ?? [],
+        issue.timelineItems.nodes?.slice(closeIndex + 1) ?? [],
+      ]
+    }, [issue.timelineItems.nodes])
   const workloadImage = useMemo(() => {
     const bodyHtmlContainer = document.createElement('div')
     bodyHtmlContainer.innerHTML = issue.bodyHTML.trim()
@@ -107,6 +100,12 @@ export const Report: React.FC<Props> = (props) => {
     return img.getAttribute('src')
   }, [issue.comments?.nodes, issue.bodyHTML])
 
+  const issueBodyHtmlHasImage = useMemo(() => {
+    const bodyHtmlContainer = document.createElement('div')
+    bodyHtmlContainer.innerHTML = issue.bodyHTML.trim()
+    const imgInBody = bodyHtmlContainer.querySelector('img')
+    return imgInBody != null
+  }, [issue.bodyHTML])
   return (
     <div>
       <header className="sticky top-0 flex  items-center justify-between bg-rosePineDawn-base px-4 py-2">
@@ -131,39 +130,55 @@ export const Report: React.FC<Props> = (props) => {
         </a>
       </header>
       <section className="px-4">
+        <div>
+          id: <span className="font-mono">{issue.id}</span>
+        </div>
         <div className="flex">
           <div className="mb-6 w-1/2 shrink-0 space-y-5">
-            <div className="pr-4">
-              {commentsBeforeIssueClosed && (
-                <ReportComment
-                  bodyHtml={commentsBeforeIssueClosed}
-                  issueUrl={issue.url}
-                  removeFirstParagraph={true}
-                  removeFirstImage={true}
-                />
+            <div className="space-y-8 pr-4">
+              <ReportComment
+                bodyHtml={issue.bodyHTML}
+                id={issue.id}
+                issueUrl={issue.url}
+                removeFirstImage={issueBodyHtmlHasImage}
+                removeFirstParagraph={true}
+              />
+              {timelineEventsBeforeIssueClosed.map((event) =>
+                match(event)
+                  .with({ __typename: 'IssueComment' }, (comment) => (
+                    <ReportComment
+                      id={comment.id}
+                      key={comment.id}
+                      bodyHtml={comment.bodyHTML}
+                      issueUrl={issue.url}
+                      removeFirstImage={!issueBodyHtmlHasImage}
+                    />
+                  ))
+                  .otherwise(() => null),
               )}
               {timelineEventsAfterIssueClosed.length > 0 && (
-                <div className="rounded bg-rosePineDawn-surface p-4">
-                  <header className="flex items-center space-x-1 text-lg">
+                <div className="">
+                  <header className="flex items-center space-x-1 border-b pb-2 text-xl">
                     <ChatBubbleLeftRightIcon className="h-5 w-5" />
                     <p>Comments</p>
                   </header>
-                  <div className="divide-y">
+                  <div>
                     {timelineEventsAfterIssueClosed.map((event) =>
                       match(event)
                         .with({ __typename: 'IssueComment' }, (comment) =>
                           match(comment.author)
                             .with({ __typename: 'User' }, (user) => (
-                              <div className="space-y-2 py-3" key={comment?.id}>
+                              <div className="space-y-2 py-4" key={comment?.id}>
                                 <div className="flex space-x-2">
                                   <img
                                     src={user.avatarUrl}
                                     className="h-6 w-6 rounded-full ring-2 ring-white"
                                   />
-                                  <p>{user.login}</p>
+                                  <p className="font-bold">{user.login}</p>
                                 </div>
                                 <div className="pl-8">
                                   <ReportComment
+                                    id={comment.id}
                                     bodyHtml={comment.bodyHTML}
                                     issueUrl={issue.url}
                                   />
