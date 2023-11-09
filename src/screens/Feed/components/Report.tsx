@@ -130,9 +130,6 @@ export const Report: React.FC<Props> = (props) => {
         </a>
       </header>
       <section className="px-4">
-        <div>
-          id: <span className="font-mono">{issue.id}</span>
-        </div>
         <div className="flex">
           <div className="mb-6 w-1/2 shrink-0 space-y-5">
             <div className="space-y-8 pr-4">
