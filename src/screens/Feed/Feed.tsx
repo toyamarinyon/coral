@@ -106,7 +106,7 @@ export const Feed: React.FC<Props> = ({
         <Suspense fallback={<Loader />}>
           <ReportList
             scrollContainerRef={scrollContainerRef}
-            query={`repo:${repo} created:${reportDate}T00:00:00+09:00..${tomorrow}T00:00:00+09:00 in:title sort:interactions state:closed ${extraQuery}`}
+            query={`repo:${repo} created:${reportDate}T00:00:00+09:00..${tomorrow}T00:00:00+09:00 in:title sort:updated state:closed ${extraQuery}`}
           />
         </Suspense>
       </ErrorBoundary>
