@@ -5,6 +5,7 @@ import {
   ChangeEventHandler,
   Suspense,
   useCallback,
+  useMemo,
   useRef,
   useState,
 } from 'react'
@@ -65,6 +66,13 @@ export const Feed: React.FC<Props> = ({
     }
     setReportDate(e.target.value)
   }, [])
+  const tomorrow = useMemo(
+    () =>
+      dateToDateInputValue(
+        new Date(new Date(reportDate).getTime() + 24 * 60 * 60 * 1000),
+      ),
+    [reportDate],
+  )
   return (
     <main className="flex w-full">
       <div className="px-1 py-2">
@@ -98,10 +106,7 @@ export const Feed: React.FC<Props> = ({
         <Suspense fallback={<Loader />}>
           <ReportList
             scrollContainerRef={scrollContainerRef}
-            query={`repo:${repo} "${reportDate.replace(
-              /-/g,
-              '/',
-            )}" in:title sort:interactions state:closed ${extraQuery}`}
+            query={`repo:${repo} created:${reportDate}T00:00:00+09:00..${tomorrow}T00:00:00+09:00 in:title sort:interactions state:closed ${extraQuery}`}
           />
         </Suspense>
       </ErrorBoundary>
