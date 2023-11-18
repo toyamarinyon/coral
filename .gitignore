@@ -25,3 +25,4 @@ gql
 *.sw?
 
 .dev.vars
+.wrangler
