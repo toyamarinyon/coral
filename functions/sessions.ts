@@ -12,8 +12,8 @@ export const onRequest: PagesFunction = async ({ request }) => {
       httpOnly: true,
     },
   })
-  if (session?.user == null) {
-    new Response('session is null', { status: 401 })
+  if (session.user == null) {
+    return new Response('session is null', { status: 401 })
   }
   return new Response(`You're logged in as ${session.user.name}!`, {
     status: 200,
