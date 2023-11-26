@@ -5,6 +5,6 @@ export const useSignIn = (): AuthContextType => {
   const { loading, isSignedIn } = useAuthContext()
   return {
     loading,
-    signIn: isSignedIn,
-  } as unknown as AuthContextType
+    isSignedIn,
+  } as AuthContextType
 }
