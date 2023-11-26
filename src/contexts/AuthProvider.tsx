@@ -17,6 +17,8 @@ export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
   useEffect(() => {
     fetch('/sessions')
       .then((res) => {
+        console.log(res)
+        console.log({ resStatus: res.status })
         setIsSignedIn(res.status === 200)
       })
       .finally(() => {
