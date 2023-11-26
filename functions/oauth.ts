@@ -84,15 +84,14 @@ export const onRequest: PagesFunction<Env> = async ({ env, request }) => {
   })
   const user = await getUser(accessToken)
 
-  // const response = new Response(
-  //   `<html><head><meta http-equiv="refresh" content="1;URL=${url.protocol}//${url.host}"></head><body></body></html>`,
-  //   {
-  //     headers: {
-  //       'Content-Type': 'text/html; charset=UTF-8',
-  //     },
-  //   },
-  // )
-  const response = new Response(`hello ${user.login}!`)
+  const response = new Response(
+    `<html><head><meta http-equiv="refresh" content="1;URL=${url.protocol}//${url.host}"></head><body></body></html>`,
+    {
+      headers: {
+        'Content-Type': 'text/html; charset=UTF-8',
+      },
+    },
+  )
 
   const session = await getIronSession(request, response, {
     cookieName: 'session',
