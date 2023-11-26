@@ -1,7 +1,8 @@
+import { SignedIn, SignedOut } from './components'
 import { Config } from './config'
-import { ApolloProvider, NetWorkErrorHandler } from './contexts'
+import { ApolloProvider, AuthProvider, NetWorkErrorHandler } from './contexts'
 import { useConfig, useRouter } from './hooks/'
-import { ConfigurationForm, Feed } from './screens'
+import { ConfigurationForm, Feed, Login } from './screens'
 import { useCallback, useEffect } from 'react'
 import { Toaster, toast } from 'sonner'
 import { match } from 'ts-pattern'
@@ -36,42 +37,47 @@ export const App: React.FC = () => {
   }, [config])
 
   return (
-    <>
-      {match([config, route])
-        .with(
-          [{ state: 'configured' }, 'feed'],
-          ([{ repo, authToken, title, extraQuery }]) => (
-            <ApolloProvider
-              authToken={authToken}
-              onNetworkError={handleNetworkError}
-            >
-              <Feed
-                title={title}
-                repo={repo}
-                extraQuery={extraQuery}
-                goToConfigurationForm={goToConfigurationForm}
+    <AuthProvider>
+      <SignedIn>
+        {match([config, route])
+          .with(
+            [{ state: 'configured' }, 'feed'],
+            ([{ repo, authToken, title, extraQuery }]) => (
+              <ApolloProvider
+                authToken={authToken}
+                onNetworkError={handleNetworkError}
+              >
+                <Feed
+                  title={title}
+                  repo={repo}
+                  extraQuery={extraQuery}
+                  goToConfigurationForm={goToConfigurationForm}
+                />
+              </ApolloProvider>
+            ),
+          )
+          .with(
+            [{ state: 'configured' }, 'setting'],
+            ([{ repo, authToken, title, extraQuery }]) => (
+              <ConfigurationForm
+                onSubmit={handleSubmit}
+                defaultValues={{
+                  repo,
+                  authToken,
+                  title,
+                  extraQuery,
+                }}
               />
-            </ApolloProvider>
-          ),
-        )
-        .with(
-          [{ state: 'configured' }, 'setting'],
-          ([{ repo, authToken, title, extraQuery }]) => (
-            <ConfigurationForm
-              onSubmit={handleSubmit}
-              defaultValues={{
-                repo,
-                authToken,
-                title,
-                extraQuery,
-              }}
-            />
-          ),
-        )
-        .otherwise(() => (
-          <ConfigurationForm onSubmit={handleSubmit} />
-        ))}
+            ),
+          )
+          .otherwise(() => (
+            <ConfigurationForm onSubmit={handleSubmit} />
+          ))}
+      </SignedIn>
+      <SignedOut>
+        <Login />
+      </SignedOut>
       <Toaster />
-    </>
+    </AuthProvider>
   )
 }
