@@ -42,11 +42,8 @@ export const App: React.FC = () => {
         {match([config, route])
           .with(
             [{ state: 'configured' }, 'feed'],
-            ([{ repo, authToken, title, extraQuery }]) => (
-              <ApolloProvider
-                authToken={authToken}
-                onNetworkError={handleNetworkError}
-              >
+            ([{ repo, title, extraQuery }]) => (
+              <ApolloProvider onNetworkError={handleNetworkError}>
                 <Feed
                   title={title}
                   repo={repo}
@@ -58,12 +55,11 @@ export const App: React.FC = () => {
           )
           .with(
             [{ state: 'configured' }, 'setting'],
-            ([{ repo, authToken, title, extraQuery }]) => (
+            ([{ repo, title, extraQuery }]) => (
               <ConfigurationForm
                 onSubmit={handleSubmit}
                 defaultValues={{
                   repo,
-                  authToken,
                   title,
                   extraQuery,
                 }}

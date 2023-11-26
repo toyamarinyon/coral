@@ -1,4 +1,3 @@
-import { Config } from '../config'
 import {
   ApolloClient,
   ApolloProvider as OriginalApolloProvider,
@@ -16,9 +15,10 @@ export type NetWorkErrorHandler = (netWorkError: ServerError) => void
 interface Props {
   onNetworkError: NetWorkErrorHandler
 }
-export const ApolloProvider: React.FC<
-  PropsWithChildren<Pick<Config, 'authToken'> & Props>
-> = ({ children, onNetworkError }) => {
+export const ApolloProvider: React.FC<PropsWithChildren<Props>> = ({
+  children,
+  onNetworkError,
+}) => {
   const client = useMemo(() => {
     const httpLink = createHttpLink({
       uri: `${location.protocol}//${location.host}/graphql`,
