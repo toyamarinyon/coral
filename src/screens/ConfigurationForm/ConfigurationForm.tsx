@@ -21,16 +21,16 @@ export const ConfigurationForm: React.FC<Props> = ({
       const rawData = Object.fromEntries(new FormData(event.currentTarget))
       const data = parse(configSchema, rawData)
       setVerifyingGhToken(true)
-      const { status } = await fetch('https://api.github.com', {
-        headers: {
-          Authorization: `Bearer ${data.authToken}`,
-        },
-      })
-      setVerifyingGhToken(false)
-      if (status === 401) {
-        setGhTokenError({ message: 'Invalid token' })
-        return
-      }
+      // const { status } = await fetch('https://api.github.com', {
+      //   headers: {
+      //     Authorization: `Bearer ${data.authToken}`,
+      //   },
+      // })
+      // setVerifyingGhToken(false)
+      // if (status === 401) {
+      //   setGhTokenError({ message: 'Invalid token' })
+      //   return
+      // }
       onSubmit(data)
     },
     [onSubmit],
