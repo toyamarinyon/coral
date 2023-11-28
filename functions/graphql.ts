@@ -1,18 +1,10 @@
+import { Env } from './env.js'
 import { getSession } from './helpers/getSession.js'
 
-export const onRequest: PagesFunction = async ({ request }) => {
-  // request.credentials = 'credentials'
-  // const session = await getIronSession(request, new Response(), {
-  //   cookieName: 'session',
-  //   password: 'complex_password_at_least_32_characters_long',
-  //   cookieOptions: {
-  //     secure: true,
-  //     httpOnly: true,
-  //   },
-  // })
+export const onRequest: PagesFunction<Env> = async ({ env, request }) => {
   const session = await getSession({
     request,
-    password: 'complex_password_at_least_32_characters_long',
+    password: env.SESSION_SECRET,
   })
   if (session.accessToken == null) {
     return new Response('accessToken is null', { status: 401 })

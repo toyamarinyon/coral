@@ -1,6 +1,5 @@
 import { Env } from './env.js'
 import { getSession } from './helpers/getSession.js'
-import { getIronSession } from 'iron-session/edge'
 import { object, string, parse, number } from 'valibot'
 
 const callbackParamsSchema = object({
@@ -93,16 +92,8 @@ export const onRequest: PagesFunction<Env> = async ({ env, request }) => {
   const session = await getSession({
     request,
     response,
-    password: 'complex_password_at_least_32_characters_long',
+    password: env.SESSION_SECRET,
   })
-  // const session = await getIronSession(request, response, {
-  //   cookieName: 'session',
-  //   password: 'complex_password_at_least_32_characters_long',
-  //   cookieOptions: {
-  //     secure: true,
-  //     httpOnly: true,
-  //   },
-  // })
   session.user = { name: user.login }
   session.accessToken = accessToken
   await session.save()
