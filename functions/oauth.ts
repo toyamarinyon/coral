@@ -1,14 +1,11 @@
+import { Env } from './env.js'
+import { getSession } from './helpers/getSession.js'
 import { getIronSession } from 'iron-session/edge'
 import { object, string, parse, number } from 'valibot'
 
 const callbackParamsSchema = object({
   code: string(),
 })
-
-interface Env {
-  GITHUB_OAUTH_CLIENT_ID: string
-  GITHUB_OAUTH_CLIENT_SECRET: string
-}
 
 declare module 'iron-session' {
   interface IronSessionData {
@@ -93,14 +90,19 @@ export const onRequest: PagesFunction<Env> = async ({ env, request }) => {
     },
   )
 
-  const session = await getIronSession(request, response, {
-    cookieName: 'session',
+  const session = await getSession({
+    request,
+    response,
     password: 'complex_password_at_least_32_characters_long',
-    cookieOptions: {
-      secure: true,
-      httpOnly: true,
-    },
   })
+  // const session = await getIronSession(request, response, {
+  //   cookieName: 'session',
+  //   password: 'complex_password_at_least_32_characters_long',
+  //   cookieOptions: {
+  //     secure: true,
+  //     httpOnly: true,
+  //   },
+  // })
   session.user = { name: user.login }
   session.accessToken = accessToken
   await session.save()
