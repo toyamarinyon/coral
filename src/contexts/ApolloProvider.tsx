@@ -1,4 +1,3 @@
-import { Config } from '../config'
 import {
   ApolloClient,
   ApolloProvider as OriginalApolloProvider,
@@ -7,7 +6,6 @@ import {
   from,
   ServerError,
 } from '@apollo/client'
-import { setContext } from '@apollo/client/link/context'
 import { onError } from '@apollo/client/link/error'
 import { relayStylePagination } from '@apollo/client/utilities'
 import { PropsWithChildren, Suspense, useMemo } from 'react'
@@ -17,23 +15,13 @@ export type NetWorkErrorHandler = (netWorkError: ServerError) => void
 interface Props {
   onNetworkError: NetWorkErrorHandler
 }
-export const ApolloProvider: React.FC<
-  PropsWithChildren<Pick<Config, 'authToken'> & Props>
-> = ({ authToken, children, onNetworkError }) => {
+export const ApolloProvider: React.FC<PropsWithChildren<Props>> = ({
+  children,
+  onNetworkError,
+}) => {
   const client = useMemo(() => {
     const httpLink = createHttpLink({
-      uri: 'https://api.github.com/graphql',
-    })
-
-    const authLink = setContext((_, { headers }) => {
-      // get the authentication token from local storage if it exists
-      // return the headers to the context so httpLink can read them
-      return {
-        headers: {
-          ...headers,
-          authorization: `Bearer ${authToken}`,
-        },
-      }
+      uri: `${location.protocol}//${location.host}/graphql`,
     })
 
     const errorLink = onError(({ graphQLErrors, networkError }) => {
@@ -55,7 +43,7 @@ export const ApolloProvider: React.FC<
     })
 
     const client = new ApolloClient({
-      link: from([errorLink, authLink, httpLink]),
+      link: from([errorLink, httpLink]),
       cache: new InMemoryCache({
         typePolicies: {
           Query: {
@@ -67,7 +55,7 @@ export const ApolloProvider: React.FC<
       }),
     })
     return client
-  }, [authToken, onNetworkError])
+  }, [onNetworkError])
   return (
     <OriginalApolloProvider client={client}>
       <Suspense>{children}</Suspense>

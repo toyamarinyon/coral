@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dx": "bun i &&./scripts/check-gh-command && ./scripts/download-schema && bun codegen && bun run build && bun preview",
-    "dev": "vite",
+    "dev": "wrangler pages dev -- bun vite",
     "prebuild": "bun codegen",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
@@ -17,7 +17,9 @@
     "@heroicons/react": "^2.0.18",
     "@radix-ui/react-form": "^0.0.3",
     "@radix-ui/react-popover": "^1.0.7",
+    "canvas-confetti": "^1.9.2",
     "graphql": "^16.8.1",
+    "iron-session": "^6.3.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "sonner": "^1.0.3",
@@ -25,9 +27,11 @@
     "valibot": "^0.18.0"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20231002.0",
     "@graphql-codegen/cli": "5.0.0",
     "@graphql-codegen/client-preset": "4.1.0",
     "@trivago/prettier-plugin-sort-imports": "^4.2.0",
+    "@types/canvas-confetti": "^1.6.3",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
@@ -42,6 +46,7 @@
     "prettier-plugin-tailwindcss": "^0.5.5",
     "tailwindcss": "^3.3.3",
     "typescript": "^5.2.2",
-    "vite": "^4.4.5"
+    "vite": "^4.4.5",
+    "wrangler": "^3.11.0"
   }
 }
