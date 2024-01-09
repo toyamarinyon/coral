@@ -33,10 +33,9 @@ const lastWorkDay = () => {
 }
 
 const dateToDateInputValue = (date: Date) =>
-  `${date.getFullYear()}-${date.getMonth() + 1}-${date
-    .getDate()
+  `${date.getFullYear()}-${(date.getMonth() + 1)
     .toString()
-    .padStart(2, '0')}`
+    .padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`
 
 interface Props {
   title: string
@@ -83,7 +82,7 @@ export const Feed: React.FC<Props> = ({
           <div className="flex -rotate-180 items-center space-y-3">
             <h1>{title}</h1>
             <div
-              className="relative flex cursor-pointer items-center space-y-1 rounded-full bg-rosePineDawn-overlay px-1 py-2"
+              className="bg-rosePineDawn-overlay relative flex cursor-pointer items-center space-y-1 rounded-full px-1 py-2"
               onClick={handleCalendarClick}
             >
               <CalendarDaysIcon className="h-5 w-5 rotate-90" />
